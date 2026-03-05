@@ -34,9 +34,7 @@ export class WebsiteStack extends cdk.Stack {
 
         this.bucket = new s3.Bucket(this, 'SiteBucket', {
             bucketName: siteDomain,
-            publicReadAccess: true,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-            websiteIndexDocument: 'index.html',
+            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             removalPolicy: cdk.RemovalPolicy.RETAIN,
             encryption: s3.BucketEncryption.S3_MANAGED,
         });
