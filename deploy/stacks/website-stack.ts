@@ -6,6 +6,7 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as route53Targets from 'aws-cdk-lib/aws-route53-targets';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import {Construct} from 'constructs';
 
 export interface WebsiteStackProps extends cdk.StackProps {
@@ -77,13 +78,44 @@ export class WebsiteStack extends cdk.Stack {
             priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
         });
 
-        new s3deploy.BucketDeployment(this, 'SiteDeployment', {
+        // For imported buckets, CDK cannot auto-grant OAC access — add the policy explicitly.
+        if (siteDomain) {
+            this.bucket.addToResourcePolicy(new iam.PolicyStatement({
+                actions: ['s3:GetObject'],
+                principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
+                resources: [this.bucket.arnForObjects('*')],
+                conditions: {
+                    StringEquals: {
+                        'AWS:SourceArn': this.distribution.distributionArn,
+                    },
+                },
+            }));
+        }
+
+        // Phase 1: upload all hashed assets first (JS, CSS, images, fonts).
+        // These are safe to coexist with old assets because Vite fingerprints filenames.
+        // No cache invalidation needed — new filenames are cache-miss by definition.
+        const assetsDeployment = new s3deploy.BucketDeployment(this, 'SiteAssetsDeployment', {
             sources: [s3deploy.Source.asset('../dist')],
             destinationBucket: this.bucket,
-            distribution: this.distribution,
-            distributionPaths: ['/*'],
+            exclude: ['index.html'],
+            prune: false,
             memoryLimit: 256,
         });
+
+        // Phase 2: swap index.html only after all assets are live, then invalidate.
+        // Old users still see old index.html → old hashed assets (still in S3).
+        // New users get new index.html → new hashed assets (already uploaded).
+        const indexDeployment = new s3deploy.BucketDeployment(this, 'SiteIndexDeployment', {
+            sources: [s3deploy.Source.asset('../dist')],
+            destinationBucket: this.bucket,
+            include: ['index.html'],
+            distribution: this.distribution,
+            distributionPaths: ['/index.html'],
+            prune: true,
+            memoryLimit: 256,
+        });
+        indexDeployment.node.addDependency(assetsDeployment);
 
         if (siteDomain && hostedZone) {
             new route53.RecordSet(this, 'SiteRecord', {
