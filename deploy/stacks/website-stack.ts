@@ -19,7 +19,7 @@ export class WebsiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
 
-    const useCustomDomain = !!(props.subdomain && props.zoneName);
+    const useCustomDomain = !!props.zoneName;
 
     // S3 bucket — private, accessed only through CloudFront
     const bucket = new s3.Bucket(this, "WebsiteBucket", {
@@ -34,15 +34,23 @@ export class WebsiteStack extends cdk.Stack {
     const domainNames: string[] = [];
 
     if (useCustomDomain) {
-      const fullDomain = `${props.subdomain}.${props.zoneName}`;
-      domainNames.push(fullDomain);
+      // Always include the apex domain
+      domainNames.push(props.zoneName!);
+
+      // Optionally include subdomain (e.g. www)
+      if (props.subdomain) {
+        domainNames.push(`${props.subdomain}.${props.zoneName}`);
+      }
 
       hostedZone = route53.HostedZone.fromLookup(this, "Zone", {
         domainName: props.zoneName!,
       });
 
       certificate = new acm.Certificate(this, "Certificate", {
-        domainName: fullDomain,
+        domainName: props.zoneName!,
+        subjectAlternativeNames: props.subdomain
+          ? [`${props.subdomain}.${props.zoneName}`]
+          : undefined,
         validation: acm.CertificateValidation.fromDns(hostedZone),
       });
     }
@@ -84,15 +92,26 @@ export class WebsiteStack extends cdk.Stack {
       distributionPaths: ["/*"],
     });
 
-    // Route 53 alias record
+    // Route 53 records
     if (useCustomDomain && hostedZone) {
-      new route53.ARecord(this, "AliasRecord", {
+      // Apex domain → CloudFront
+      new route53.ARecord(this, "ApexRecord", {
         zone: hostedZone,
-        recordName: props.subdomain,
         target: route53.RecordTarget.fromAlias(
           new targets.CloudFrontTarget(distribution)
         ),
       });
+
+      // Subdomain → CloudFront (e.g. www)
+      if (props.subdomain) {
+        new route53.ARecord(this, "SubdomainRecord", {
+          zone: hostedZone,
+          recordName: props.subdomain,
+          target: route53.RecordTarget.fromAlias(
+            new targets.CloudFrontTarget(distribution)
+          ),
+        });
+      }
     }
 
     // Outputs
@@ -106,7 +125,7 @@ export class WebsiteStack extends cdk.Stack {
 
     if (useCustomDomain) {
       new cdk.CfnOutput(this, "SiteUrl", {
-        value: `https://${props.subdomain}.${props.zoneName}`,
+        value: `https://${props.zoneName}`,
       });
     }
   }
