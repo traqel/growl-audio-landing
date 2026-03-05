@@ -1,0 +1,11 @@
+{
+  "app": "npx ts-node cdk.ts",
+  "context": {
+    "@aws-cdk/core:enableStackNameDriftDetection": true,
+    "@aws-cdk/core:checkKnativeSyntaxPython": true,
+    "@aws-cdk/core:checkKubernetesSyntaxPython": true,
+    "@aws-cdk-containers/ecs-service-extensions:enableAlgorithmForCreatingTaskDefinition": true,
+    "@aws-cdk/core:parseBinAndManifest": true,
+    "@aws-cdk/aws-servicecatalog:expectBootstrapRoleVersion": true
+  }
+}
