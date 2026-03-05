@@ -25,6 +25,13 @@ export class WebsiteStack extends cdk.Stack {
             ? `${props.subdomain}.${props.zoneName}`
             : undefined;
 
+        // Look up hosted zone once and reuse across all records
+        const hostedZone = props.zoneName
+            ? route53.HostedZone.fromLookup(this, 'HostedZone', {
+                domainName: props.zoneName,
+              })
+            : undefined;
+
         this.bucket = new s3.Bucket(this, 'SiteBucket', {
             bucketName: siteDomain,
             publicReadAccess: true,
@@ -35,11 +42,7 @@ export class WebsiteStack extends cdk.Stack {
         });
 
         let certificate: acm.Certificate | undefined;
-        if (siteDomain) {
-            const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-                domainName: props.zoneName!,
-            });
-
+        if (siteDomain && hostedZone) {
             certificate = new acm.Certificate(this, 'SiteCertificate', {
                 domainName: siteDomain,
                 validation: acm.CertificateValidation.fromDns(hostedZone),
@@ -79,18 +82,63 @@ export class WebsiteStack extends cdk.Stack {
             memoryLimit: 256,
         });
 
-        if (siteDomain) {
-            const target = route53.RecordTarget.fromAlias(
-                new route53Targets.CloudFrontTarget(this.distribution)
-            );
-
+        if (siteDomain && hostedZone) {
             new route53.RecordSet(this, 'SiteRecord', {
                 recordName: siteDomain,
                 recordType: route53.RecordType.A,
-                target,
-                zone: route53.HostedZone.fromLookup(this, 'HostedZone2', {
-                    domainName: props.zoneName!,
-                }),
+                target: route53.RecordTarget.fromAlias(
+                    new route53Targets.CloudFrontTarget(this.distribution)
+                ),
+                zone: hostedZone,
+            });
+        }
+
+        // www → apex redirect
+        if (props.zoneName && hostedZone) {
+            const wwwDomain = `www.${props.zoneName}`;
+
+            // Redirect-only bucket — S3 returns 301 to apex via HTTP website endpoint
+            new s3.Bucket(this, 'WwwBucket', {
+                bucketName: wwwDomain,
+                websiteRedirect: {
+                    hostName: props.zoneName,
+                    protocol: s3.RedirectProtocol.HTTPS,
+                },
+                removalPolicy: cdk.RemovalPolicy.DESTROY,
+            });
+
+            const wwwCertificate = new acm.Certificate(this, 'WwwCertificate', {
+                domainName: wwwDomain,
+                validation: acm.CertificateValidation.fromDns(hostedZone),
+            });
+
+            // CloudFront must use HTTP_ONLY to the S3 website endpoint (no OAC support for redirect buckets)
+            const wwwDistribution = new cloudfront.Distribution(this, 'WwwDistribution', {
+                defaultBehavior: {
+                    origin: new origins.HttpOrigin(
+                        `${wwwDomain}.s3-website-${this.region}.amazonaws.com`,
+                        { protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY }
+                    ),
+                    viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+                    cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+                },
+                domainNames: [wwwDomain],
+                certificate: wwwCertificate,
+                priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
+            });
+
+            new route53.RecordSet(this, 'WwwRecord', {
+                recordName: wwwDomain,
+                recordType: route53.RecordType.A,
+                target: route53.RecordTarget.fromAlias(
+                    new route53Targets.CloudFrontTarget(wwwDistribution)
+                ),
+                zone: hostedZone,
+            });
+
+            new cdk.CfnOutput(this, 'WwwRedirectUrl', {
+                value: wwwDomain,
+                description: 'www domain (redirects to apex)',
             });
         }
 
