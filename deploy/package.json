@@ -1,0 +1,27 @@
+{
+  "name": "growl-audio-landing-deploy",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "destroy": "cdk destroy",
+    "synth": "cdk synth",
+    "diff": "cdk diff"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.150.0",
+    "constructs": "^10.3.0",
+    "dotenv": "^17.3.1",
+    "source-map-support": "^0.5.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/source-map-support": "^0.5.10",
+    "aws-cdk": "^2.150.0",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "^5.5.3"
+  }
+}
