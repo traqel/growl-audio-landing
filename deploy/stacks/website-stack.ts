@@ -27,8 +27,9 @@ export class WebsiteStack extends cdk.Stack {
 
         this.bucket = new s3.Bucket(this, 'SiteBucket', {
             bucketName: siteDomain,
-            publicReadAccess: false,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+            publicReadAccess: true,
+            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+            websiteIndexDocument: 'index.html',
             removalPolicy: cdk.RemovalPolicy.RETAIN,
             encryption: s3.BucketEncryption.S3_MANAGED,
         });
@@ -46,17 +47,17 @@ export class WebsiteStack extends cdk.Stack {
         }
 
         this.distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
-            defaultRootObject: 'index.js',
+            defaultRootObject: 'index.html',
             errorResponses: [
                 {
                     httpStatus: 403,
                     responseHttpStatus: 200,
-                    responsePagePath: '/index.js',
+                    responsePagePath: '/index.html',
                 },
                 {
                     httpStatus: 404,
                     responseHttpStatus: 200,
-                    responsePagePath: '/index.js',
+                    responsePagePath: '/index.html',
                 },
             ],
             defaultBehavior: {
