@@ -103,8 +103,9 @@ export class WebsiteStack extends cdk.Stack {
       });
 
       // Subdomain → CloudFront (e.g. www)
+      // Keep logical ID "AliasRecord" to match the previously deployed resource
       if (props.subdomain) {
-        new route53.ARecord(this, "SubdomainRecord", {
+        new route53.ARecord(this, "AliasRecord", {
           zone: hostedZone,
           recordName: props.subdomain,
           target: route53.RecordTarget.fromAlias(
