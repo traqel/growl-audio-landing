@@ -1,198 +1,113 @@
-import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
-import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
-import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import * as route53 from 'aws-cdk-lib/aws-route53';
-import * as route53Targets from 'aws-cdk-lib/aws-route53-targets';
-import {Construct} from 'constructs';
+import * as cdk from "aws-cdk-lib";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
+import { Construct } from "constructs";
+import * as path from "path";
 
-export interface WebsiteStackProps extends cdk.StackProps {
-    domainName?: string;
-    subdomain?: string;
-    zoneName?: string;
+interface WebsiteStackProps extends cdk.StackProps {
+  domainName?: string;
+  subdomain?: string;
+  zoneName?: string;
 }
 
 export class WebsiteStack extends cdk.Stack {
-    public readonly distribution: cloudfront.Distribution;
-    public readonly bucket: s3.IBucket;
+  constructor(scope: Construct, id: string, props: WebsiteStackProps) {
+    super(scope, id, props);
 
-    constructor(scope: Construct, id: string, props: WebsiteStackProps) {
-        super(scope, id, props);
+    const useCustomDomain = !!(props.subdomain && props.zoneName);
 
-        // If subdomain is 'www' or unset, the canonical site lives at the apex.
-        // A real subdomain (e.g. 'app') is the only case where we use subdomain.zoneName.
-        const siteDomain = props.zoneName
-            ? (props.subdomain && props.subdomain !== 'www'
-                ? `${props.subdomain}.${props.zoneName}`
-                : props.zoneName)
-            : undefined;
+    // S3 bucket — private, accessed only through CloudFront
+    const bucket = new s3.Bucket(this, "WebsiteBucket", {
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+    });
 
-        // Look up hosted zone once and reuse across all records
-        const hostedZone = props.zoneName
-            ? route53.HostedZone.fromLookup(this, 'HostedZone', {
-                domainName: props.zoneName,
-              })
-            : undefined;
+    // Certificate + hosted zone (only if domain is configured)
+    let certificate: acm.ICertificate | undefined;
+    let hostedZone: route53.IHostedZone | undefined;
+    const domainNames: string[] = [];
 
-        this.bucket = siteDomain
-            ? s3.Bucket.fromBucketName(this, 'SiteBucket', siteDomain)
-            : new s3.Bucket(this, 'SiteBucket', {
-                blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-                removalPolicy: cdk.RemovalPolicy.RETAIN,
-                encryption: s3.BucketEncryption.S3_MANAGED,
-              });
+    if (useCustomDomain) {
+      const fullDomain = `${props.subdomain}.${props.zoneName}`;
+      domainNames.push(fullDomain);
 
-        let certificate: acm.Certificate | undefined;
-        if (siteDomain && hostedZone) {
-            certificate = new acm.Certificate(this, 'SiteCertificate', {
-                domainName: siteDomain,
-                validation: acm.CertificateValidation.fromDns(hostedZone),
-            });
-        }
+      hostedZone = route53.HostedZone.fromLookup(this, "Zone", {
+        domainName: props.zoneName!,
+      });
 
-        this.distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
-            defaultRootObject: 'index.html',
-            errorResponses: [
-                {
-                    httpStatus: 403,
-                    responseHttpStatus: 200,
-                    responsePagePath: '/index.html',
-                },
-                {
-                    httpStatus: 404,
-                    responseHttpStatus: 200,
-                    responsePagePath: '/index.html',
-                },
-            ],
-            defaultBehavior: {
-                origin: origins.S3BucketOrigin.withOriginAccessControl(this.bucket),
-                compress: true,
-                viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
-            },
-            domainNames: siteDomain ? [siteDomain] : undefined,
-            certificate: certificate,
-            priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
-        });
-
-        // addToResourcePolicy is a no-op on imported buckets; use CfnBucketPolicy directly.
-        if (siteDomain) {
-            new s3.CfnBucketPolicy(this, 'SiteBucketPolicy', {
-                bucket: this.bucket.bucketName,
-                policyDocument: {
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Allow',
-                        Principal: { Service: 'cloudfront.amazonaws.com' },
-                        Action: 's3:GetObject',
-                        Resource: this.bucket.arnForObjects('*'),
-                        Condition: {
-                            StringEquals: {
-                                'AWS:SourceArn': this.distribution.distributionArn,
-                            },
-                        },
-                    }],
-                },
-            });
-        }
-
-        // Phase 1: upload all hashed assets first (JS, CSS, images, fonts).
-        // These are safe to coexist with old assets because Vite fingerprints filenames.
-        // No cache invalidation needed — new filenames are cache-miss by definition.
-        const assetsDeployment = new s3deploy.BucketDeployment(this, 'SiteAssetsDeployment', {
-            sources: [s3deploy.Source.asset('../dist')],
-            destinationBucket: this.bucket,
-            exclude: ['index.html'],
-            prune: false,
-            memoryLimit: 256,
-        });
-
-        // Phase 2: swap index.html only after all assets are live, then invalidate.
-        // Old users still see old index.html → old hashed assets (still in S3).
-        // New users get new index.html → new hashed assets (already uploaded).
-        const indexDeployment = new s3deploy.BucketDeployment(this, 'SiteIndexDeployment', {
-            sources: [s3deploy.Source.asset('../dist')],
-            destinationBucket: this.bucket,
-            include: ['index.html'],
-            distribution: this.distribution,
-            distributionPaths: ['/index.html'],
-            prune: true,
-            memoryLimit: 256,
-        });
-        indexDeployment.node.addDependency(assetsDeployment);
-
-        if (siteDomain && hostedZone) {
-            new route53.RecordSet(this, 'SiteRecord', {
-                recordName: siteDomain,
-                recordType: route53.RecordType.A,
-                target: route53.RecordTarget.fromAlias(
-                    new route53Targets.CloudFrontTarget(this.distribution)
-                ),
-                zone: hostedZone,
-            });
-        }
-
-        // www → apex redirect
-        if (props.zoneName && hostedZone) {
-            const wwwDomain = `www.${props.zoneName}`;
-
-            // Redirect-only bucket — S3 returns 301 to apex via HTTP website endpoint
-            new s3.Bucket(this, 'WwwBucket', {
-                bucketName: wwwDomain,
-                websiteRedirect: {
-                    hostName: props.zoneName,
-                    protocol: s3.RedirectProtocol.HTTPS,
-                },
-                removalPolicy: cdk.RemovalPolicy.DESTROY,
-            });
-
-            const wwwCertificate = new acm.Certificate(this, 'WwwCertificate', {
-                domainName: wwwDomain,
-                validation: acm.CertificateValidation.fromDns(hostedZone),
-            });
-
-            // CloudFront must use HTTP_ONLY to the S3 website endpoint (no OAC support for redirect buckets)
-            const wwwDistribution = new cloudfront.Distribution(this, 'WwwDistribution', {
-                defaultBehavior: {
-                    origin: new origins.HttpOrigin(
-                        `${wwwDomain}.s3-website-${this.region}.amazonaws.com`,
-                        { protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY }
-                    ),
-                    viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                    cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-                },
-                domainNames: [wwwDomain],
-                certificate: wwwCertificate,
-                priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
-            });
-
-            new route53.RecordSet(this, 'WwwRecord', {
-                recordName: wwwDomain,
-                recordType: route53.RecordType.A,
-                target: route53.RecordTarget.fromAlias(
-                    new route53Targets.CloudFrontTarget(wwwDistribution)
-                ),
-                zone: hostedZone,
-            });
-
-            new cdk.CfnOutput(this, 'WwwRedirectUrl', {
-                value: wwwDomain,
-                description: 'www domain (redirects to apex)',
-            });
-        }
-
-        new cdk.CfnOutput(this, 'SiteUrl', {
-            value: this.distribution.domainName,
-            description: 'CloudFront distribution URL',
-        });
-
-        if (siteDomain) {
-            new cdk.CfnOutput(this, 'SiteDomain', {
-                value: siteDomain,
-                description: 'Site domain name',
-            });
-        }
+      certificate = new acm.Certificate(this, "Certificate", {
+        domainName: fullDomain,
+        validation: acm.CertificateValidation.fromDns(hostedZone),
+      });
     }
+
+    // CloudFront distribution
+    const distribution = new cloudfront.Distribution(this, "Distribution", {
+      defaultBehavior: {
+        origin: origins.S3BucketOrigin.withOriginAccessControl(bucket),
+        viewerProtocolPolicy:
+          cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        compress: true,
+      },
+      defaultRootObject: "index.html",
+      domainNames: domainNames.length > 0 ? domainNames : undefined,
+      certificate,
+      priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
+      errorResponses: [
+        {
+          httpStatus: 403,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+          ttl: cdk.Duration.minutes(5),
+        },
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: "/index.html",
+          ttl: cdk.Duration.minutes(5),
+        },
+      ],
+    });
+
+    // Deploy site contents to S3 + invalidate CloudFront
+    new s3deploy.BucketDeployment(this, "DeployWebsite", {
+      sources: [s3deploy.Source.asset(path.join(__dirname, "../../dist"))],
+      destinationBucket: bucket,
+      distribution,
+      distributionPaths: ["/*"],
+    });
+
+    // Route 53 alias record
+    if (useCustomDomain && hostedZone) {
+      new route53.ARecord(this, "AliasRecord", {
+        zone: hostedZone,
+        recordName: props.subdomain,
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(distribution)
+        ),
+      });
+    }
+
+    // Outputs
+    new cdk.CfnOutput(this, "DistributionDomainName", {
+      value: distribution.distributionDomainName,
+    });
+
+    new cdk.CfnOutput(this, "BucketName", {
+      value: bucket.bucketName,
+    });
+
+    if (useCustomDomain) {
+      new cdk.CfnOutput(this, "SiteUrl", {
+        value: `https://${props.subdomain}.${props.zoneName}`,
+      });
+    }
+  }
 }

@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "aws-common@aws-skills": true,
+    "aws-cdk@aws-skills": true,
+    "aws-cost-ops@aws-skills": true,
+    "serverless-eda@aws-skills": true,
+    "aws-agentic-ai@aws-skills": true,
+    "frontend-design@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  }
+}
