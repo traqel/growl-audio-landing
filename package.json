@@ -1,7 +1,7 @@
 {
   "name": "growl-audio-landing",
   "version": "1.0.0",
-  "description": "Growl Audio Landing Page",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,8 +9,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.5.3",
-    "vite": "^7.3.1"
-  },
-  "private": true
+    "vite": "^5.4.0"
+  }
 }

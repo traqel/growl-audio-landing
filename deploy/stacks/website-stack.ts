@@ -21,8 +21,12 @@ export class WebsiteStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: WebsiteStackProps) {
         super(scope, id, props);
 
-        const siteDomain = props.subdomain && props.zoneName
-            ? `${props.subdomain}.${props.zoneName}`
+        // If subdomain is 'www' or unset, the canonical site lives at the apex.
+        // A real subdomain (e.g. 'app') is the only case where we use subdomain.zoneName.
+        const siteDomain = props.zoneName
+            ? (props.subdomain && props.subdomain !== 'www'
+                ? `${props.subdomain}.${props.zoneName}`
+                : props.zoneName)
             : undefined;
 
         // Look up hosted zone once and reuse across all records
