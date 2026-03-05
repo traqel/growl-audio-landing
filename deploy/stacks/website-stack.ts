@@ -16,7 +16,7 @@ export interface WebsiteStackProps extends cdk.StackProps {
 
 export class WebsiteStack extends cdk.Stack {
     public readonly distribution: cloudfront.Distribution;
-    public readonly bucket: s3.Bucket;
+    public readonly bucket: s3.IBucket;
 
     constructor(scope: Construct, id: string, props: WebsiteStackProps) {
         super(scope, id, props);
@@ -36,12 +36,13 @@ export class WebsiteStack extends cdk.Stack {
               })
             : undefined;
 
-        this.bucket = new s3.Bucket(this, 'SiteBucket', {
-            bucketName: siteDomain,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-            removalPolicy: cdk.RemovalPolicy.RETAIN,
-            encryption: s3.BucketEncryption.S3_MANAGED,
-        });
+        this.bucket = siteDomain
+            ? s3.Bucket.fromBucketName(this, 'SiteBucket', siteDomain)
+            : new s3.Bucket(this, 'SiteBucket', {
+                blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+                removalPolicy: cdk.RemovalPolicy.RETAIN,
+                encryption: s3.BucketEncryption.S3_MANAGED,
+              });
 
         let certificate: acm.Certificate | undefined;
         if (siteDomain && hostedZone) {
