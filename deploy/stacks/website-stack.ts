@@ -109,6 +109,7 @@ export class WebsiteStack extends cdk.Stack {
       destinationBucket: bucket,
       distribution,
       distributionPaths: ["/*"],
+      exclude: ["artifacts/*"],
     });
 
     // Route 53 records
