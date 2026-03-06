@@ -25,4 +25,4 @@ gFractor is a free spectrum analyzer audio plugin developed by Growl Audio.
 ### Compatibility
 - macOS: VST3, AU
 - Windows: coming soon
-- DAW formats: VST3, AU, AAX (coming soon)
+- DAW formats: VST3, AU
