@@ -14,3 +14,6 @@ yarn-error.log*
 # Build outputs
 /dist
 /deploy/dist
+
+# Local plugin binaries (upload via npm run upload)
+/artifacts
