@@ -7,5 +7,5 @@ export default defineConfig({
     emptyOutDir: true,
   },
   publicDir: 'public',
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.svg'],
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.svg', '**/*.webp'],
 });

@@ -1,0 +1,28 @@
+# Growl Audio
+
+Growl Audio makes precision audio plugins for music producers and engineers.
+
+## gFractor
+
+gFractor is a free spectrum analyzer audio plugin developed by Growl Audio.
+
+- Type: Audio plugin (spectrum analyzer)
+- Formats: VST3, AU (macOS); Windows coming soon
+- Price: Free. No demo mode, no watermarks, no trial limits.
+- Version: 1.0.0
+- Download: https://growl-audio.com
+
+### Features
+- Mid/Side (M/S) analysis
+- Left/Right (L/R) analysis
+- Transient/Tone separation analysis
+- Sidechain signal comparison with one-key swap
+- Goniometer for stereo phase and imaging
+- Correlation meter for mono compatibility
+- Stereo width visualization per octave
+- FFT with adjustable slope, decay, and overlap
+
+### Compatibility
+- macOS: VST3, AU
+- Windows: coming soon
+- DAW formats: VST3, AU, AAX (coming soon)
