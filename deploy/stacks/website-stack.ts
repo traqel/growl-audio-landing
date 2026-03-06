@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import { ResponseHeadersPolicy } from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as route53 from "aws-cdk-lib/aws-route53";
@@ -83,6 +84,24 @@ export class WebsiteStack extends cdk.Stack {
         },
       ],
     });
+
+    // Response headers policy that forces browser downloads for /downloads/*
+    const downloadResponsePolicy = new ResponseHeadersPolicy(this, "DownloadHeadersPolicy", {
+      customHeadersBehavior: {
+        customHeaders: [
+          { header: "Content-Disposition", value: "attachment", override: false },
+        ],
+      },
+    });
+
+    distribution.addBehavior("/downloads/*",
+      origins.S3BucketOrigin.withOriginAccessControl(bucket),
+      {
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        responseHeadersPolicy: downloadResponsePolicy,
+      }
+    );
 
     // Deploy site contents to S3 + invalidate CloudFront
     new s3deploy.BucketDeployment(this, "DeployWebsite", {
