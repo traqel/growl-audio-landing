@@ -76,7 +76,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* FabFilter-inspired dark palette, tuned to gFractor's green+amber */
+      /* Dark palette with cyan-to-white accent ramp */
       --bg:           #0b0c10;
       --bg-alt:       #0f1015;
       --surface:      #13141a;
@@ -84,18 +84,18 @@
       --border:       rgba(255,255,255,0.08);
       --border-soft:  rgba(255,255,255,0.05);
 
-      /* Product accent: gFractor green */
-      --accent:       #45b86a;
-      --accent-dim:   rgba(69,184,106,0.10);
-      --accent-glow:  rgba(69,184,106,0.22);
-      --accent-text:  #6dd48a;
+      /* Primary accent: cyan */
+      --accent:       #0095b6;
+      --accent-dim:   rgba(0,149,182,0.10);
+      --accent-glow:  rgba(0,149,182,0.22);
+      --accent-text:  #2faca6;
 
-      /* Secondary: gFractor amber */
-      --amber:        #c8921a;
-      --amber-text:   #e0aa3c;
+      /* Secondary: sage/green */
+      --amber:        #7bbc9b;
+      --amber-text:   #b4c9a3;
 
-      --text:         #e0e2ea;
-      --text-2:       #8b909e;
+      --text:         #f4e8e3;
+      --text-2:       #ddd6c0;
       --text-3:       #3e4250;
 
       --r-sm: 6px;
@@ -163,7 +163,7 @@
       width: 30px;
       height: 30px;
       border-radius: 8px;
-      background: linear-gradient(145deg, var(--accent) 0%, #2e9050 100%);
+      background: linear-gradient(145deg, var(--accent) 0%, #2faca6 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -789,9 +789,11 @@
       text-decoration: none;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 9px;
       transition: all 0.2s;
       border: none;
+      min-width: 240px;
     }
 
     .btn-dl:hover {
@@ -1098,7 +1100,7 @@
             </p>
             <div class="feature-tags">
               <span class="ftag ftag-green">Main signal</span>
-              <span class="ftag" style="color: var(--amber-text); border-color: rgba(200,146,26,0.22); background: rgba(200,146,26,0.08);">Sidechain</span>
+              <span class="ftag" style="color: var(--amber-text); border-color: rgba(123,188,155,0.22); background: rgba(123,188,155,0.08);">Sidechain</span>
               <span class="ftag">One-key swap</span>
               <span class="ftag">Visual overlay</span>
             </div>
