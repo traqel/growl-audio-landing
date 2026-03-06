@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://growl-audio.com/sitemap.xml
