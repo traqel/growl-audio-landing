@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Growl Audio – Logo Variations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0efed;
+    font-family: 'Inter', sans-serif;
+    color: #111;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: #111;
+    padding: 48px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .page-header h1 {
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 300;
+    opacity: 0.5;
+  }
+  .page-header span {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 300;
+    opacity: 0.25;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 64px 80px;
+    border-bottom: 1px solid #e0dfdc;
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #bbb;
+    margin-bottom: 40px;
+  }
+
+  .section-note {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #aaa;
+    margin-top: 24px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 3px; }
+
+  /* ── CARD ── */
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 40px;
+    position: relative;
+    min-height: 200px;
+  }
+  .card-tag {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.25;
+    font-weight: 400;
+  }
+
+  /* ── BACKGROUNDS ── */
+  .bg-white { background: #fff; border: 1px solid #e4e4e4; }
+  .bg-offwhite { background: #f0efed; border: 1px solid #ddd; }
+  .bg-dark { background: #111; }
+  .bg-black { background: #000; }
+  .bg-warm { background: #2a2218; }
+  .bg-deep { background: #0a0a0f; }
+  .bg-cream { background: #f5f0e8; border: 1px solid #e4dfd5; }
+  .bg-slate { background: #1a1d23; }
+
+  /* ── HORIZONTAL LOCKUP ── */
+  .lk-h {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .divider-v {
+    width: 1px;
+    height: 48px;
+    opacity: 0.12;
+  }
+
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .wm-primary {
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .wm-sub {
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 6px;
+    line-height: 1;
+    opacity: 0.38;
+  }
+
+  /* ── STACKED LOCKUP ── */
+  .lk-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .lk-stacked .divider-h {
+    height: 1px;
+    width: 64px;
+    opacity: 0.1;
+  }
+  .lk-stacked .wordmark {
+    align-items: center;
+  }
+
+  /* ── COMPACT LOCKUP ── */
+  .lk-compact {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .lk-compact .wm-primary {
+    font-size: 13px;
+    letter-spacing: 3px;
+  }
+  .lk-compact .wm-sub {
+    font-size: 7px;
+    letter-spacing: 5px;
+  }
+
+  /* ── WORDMARK ONLY ── */
+  .wm-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .wm-only .wm-primary {
+    font-size: 28px;
+    letter-spacing: 10px;
+  }
+  .wm-only .wm-sub {
+    font-size: 10px;
+    letter-spacing: 12px;
+  }
+
+  /* ── INLINE WORDMARK ── */
+  .wm-inline {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .wm-inline .wm-primary {
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
+  .wm-inline .wm-sub-inline {
+    font-weight: 200;
+    font-size: 20px;
+    letter-spacing: 5px;
+    opacity: 0.3;
+  }
+
+  /* ── BADGE / ENCLOSED ── */
+  .badge {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .badge-dark {
+    border-color: rgba(255,255,255,0.1);
+  }
+  .badge-light {
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  /* ── CIRCLE BADGE ── */
+  .circle-badge {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── PILL BADGE ── */
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 28px 14px 20px;
+    border-radius: 100px;
+  }
+  .pill-dark { background: rgba(255,255,255,0.06); }
+  .pill-light { background: rgba(0,0,0,0.04); }
+
+  /* ── MONO STRIP ── */
+  .mono-strip {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 48px 64px;
+    justify-content: center;
+  }
+
+  /* ── RESPONSIVE SIZES ── */
+  .sizes-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 48px;
+    justify-content: center;
+  }
+
+  /* ── GRADIENT BG ── */
+  .bg-gradient-1 {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1520 50%, #0f0a14 100%);
+  }
+  .bg-gradient-2 {
+    background: linear-gradient(160deg, #111 0%, #1e1e1e 100%);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page-header">
+  <h1>Growl Audio — Logo Variations</h1>
+  <span>Brand Identity System</span>
+</div>
+
+<!-- ═══════════════ 01 · HORIZONTAL LOCKUPS ═══════════════ -->
+<div class="section">
+  <p class="section-label">01 — Primary lockup · horizontal</p>
+  <div class="grid-2">
+
+    <div class="card bg-white">
+      <div class="lk-h">
+        <svg width="76" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <div class="divider-v" style="background:#111;"></div>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#111;">GROWL</span>
+          <span class="wm-sub" style="color:#111;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#111;">White</span>
+    </div>
+
+    <div class="card bg-black">
+      <div class="lk-h">
+        <svg width="76" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="divider-v" style="background:white;"></div>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:white;">GROWL</span>
+          <span class="wm-sub" style="color:white;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Black</span>
+    </div>
+
+    <div class="card bg-cream">
+      <div class="lk-h">
+        <svg width="76" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#2a2218"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#2a2218"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#2a2218"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#2a2218"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#2a2218"/>
+        </svg>
+        <div class="divider-v" style="background:#2a2218;"></div>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#2a2218;">GROWL</span>
+          <span class="wm-sub" style="color:#2a2218;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#2a2218;">Cream / Warm</span>
+    </div>
+
+    <div class="card bg-slate">
+      <div class="lk-h">
+        <svg width="76" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#c8c4be"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#c8c4be"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#c8c4be"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#c8c4be"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#c8c4be"/>
+        </svg>
+        <div class="divider-v" style="background:#c8c4be;"></div>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#c8c4be;">GROWL</span>
+          <span class="wm-sub" style="color:#c8c4be;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#c8c4be;">Slate / Muted</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 02 · STACKED LOCKUPS ═══════════════ -->
+<div class="section">
+  <p class="section-label">02 — Stacked lockup · centered</p>
+  <div class="grid-2">
+
+    <div class="card bg-white" style="padding:64px 40px;">
+      <div class="lk-stacked">
+        <svg width="96" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <div class="divider-h" style="background:#111;"></div>
+        <div class="wordmark" style="align-items:center;">
+          <span class="wm-primary" style="color:#111;">GROWL</span>
+          <span class="wm-sub" style="color:#111;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#111;">Stacked</span>
+    </div>
+
+    <div class="card bg-dark" style="padding:64px 40px;">
+      <div class="lk-stacked">
+        <svg width="96" height="68" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="divider-h" style="background:white;"></div>
+        <div class="wordmark" style="align-items:center;">
+          <span class="wm-primary" style="color:white;">GROWL</span>
+          <span class="wm-sub" style="color:white;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Stacked</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 03 · COMPACT LOCKUPS ═══════════════ -->
+<div class="section">
+  <p class="section-label">03 — Compact lockup · reduced footprint</p>
+  <div class="grid-3">
+
+    <div class="card bg-white">
+      <div class="lk-compact">
+        <svg width="48" height="42" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#111; font-size:13px; letter-spacing:3px;">GROWL</span>
+          <span class="wm-sub" style="color:#111; font-size:7px; letter-spacing:5px;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#111;">Compact</span>
+    </div>
+
+    <div class="card bg-offwhite">
+      <div class="lk-compact">
+        <svg width="48" height="42" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#111; font-size:13px; letter-spacing:3px;">GROWL</span>
+          <span class="wm-sub" style="color:#111; font-size:7px; letter-spacing:5px;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#111;">Compact</span>
+    </div>
+
+    <div class="card bg-dark">
+      <div class="lk-compact">
+        <svg width="48" height="42" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:white; font-size:13px; letter-spacing:3px;">GROWL</span>
+          <span class="wm-sub" style="color:white; font-size:7px; letter-spacing:5px;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Compact</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 04 · WORDMARK ONLY ═══════════════ -->
+<div class="section">
+  <p class="section-label">04 — Wordmark only · no mark</p>
+  <div class="grid-2">
+
+    <div class="card bg-white" style="padding:48px;">
+      <div class="wm-only">
+        <span class="wm-primary" style="color:#111; font-size:28px; letter-spacing:10px;">GROWL</span>
+        <span class="wm-sub" style="color:#111; font-size:10px; letter-spacing:12px;">AUDIO</span>
+      </div>
+      <span class="card-tag" style="color:#111;">Wordmark</span>
+    </div>
+
+    <div class="card bg-black" style="padding:48px;">
+      <div class="wm-only">
+        <span class="wm-primary" style="color:white; font-size:28px; letter-spacing:10px;">GROWL</span>
+        <span class="wm-sub" style="color:white; font-size:10px; letter-spacing:12px;">AUDIO</span>
+      </div>
+      <span class="card-tag" style="color:white;">Wordmark</span>
+    </div>
+
+  </div>
+  <p class="section-note">Use when the mark is already established in context or space is constrained horizontally</p>
+</div>
+
+<!-- ═══════════════ 05 · INLINE WORDMARK ═══════════════ -->
+<div class="section">
+  <p class="section-label">05 — Inline wordmark · single baseline</p>
+  <div class="grid-2">
+
+    <div class="card bg-white" style="padding:48px;">
+      <div class="wm-inline">
+        <span class="wm-primary" style="color:#111; font-size:20px; letter-spacing:5px;">GROWL</span>
+        <span style="font-weight:200; font-size:20px; letter-spacing:5px; color:#111; opacity:0.3;">AUDIO</span>
+      </div>
+      <span class="card-tag" style="color:#111;">Inline</span>
+    </div>
+
+    <div class="card bg-dark" style="padding:48px;">
+      <div class="wm-inline">
+        <span class="wm-primary" style="color:white; font-size:20px; letter-spacing:5px;">GROWL</span>
+        <span style="font-weight:200; font-size:20px; letter-spacing:5px; color:white; opacity:0.3;">AUDIO</span>
+      </div>
+      <span class="card-tag" style="color:white;">Inline</span>
+    </div>
+
+  </div>
+  <p class="section-note">Navigation bars, footers, inline mentions</p>
+</div>
+
+<!-- ═══════════════ 06 · BADGE / ENCLOSED ═══════════════ -->
+<div class="section">
+  <p class="section-label">06 — Enclosed lockup · contained</p>
+  <div class="grid-2">
+
+    <div class="card bg-offwhite" style="padding:56px;">
+      <div class="badge badge-light">
+        <svg width="52" height="46" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:#111; font-size:14px; letter-spacing:3px;">GROWL</span>
+          <span class="wm-sub" style="color:#111; font-size:7px; letter-spacing:5px;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:#111;">Enclosed</span>
+    </div>
+
+    <div class="card bg-deep" style="padding:56px;">
+      <div class="badge badge-dark">
+        <svg width="52" height="46" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="wordmark">
+          <span class="wm-primary" style="color:white; font-size:14px; letter-spacing:3px;">GROWL</span>
+          <span class="wm-sub" style="color:white; font-size:7px; letter-spacing:5px;">AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Enclosed</span>
+    </div>
+
+  </div>
+  <p class="section-note">Partnerships, co-branding, sponsored placements</p>
+</div>
+
+<!-- ═══════════════ 07 · PILL / TAG ═══════════════ -->
+<div class="section">
+  <p class="section-label">07 — Pill lockup · UI components</p>
+  <div class="grid-2">
+
+    <div class="card bg-white" style="padding:56px;">
+      <div class="pill pill-light">
+        <svg width="32" height="28" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+        <span style="font-weight:600; font-size:11px; letter-spacing:3px; color:#111;">GROWL</span>
+      </div>
+      <span class="card-tag" style="color:#111;">Pill</span>
+    </div>
+
+    <div class="card bg-dark" style="padding:56px;">
+      <div class="pill pill-dark">
+        <svg width="32" height="28" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <span style="font-weight:600; font-size:11px; letter-spacing:3px; color:white;">GROWL</span>
+      </div>
+      <span class="card-tag" style="color:white;">Pill</span>
+    </div>
+
+  </div>
+  <p class="section-note">App headers, player chrome, notification badges</p>
+</div>
+
+<!-- ═══════════════ 08 · MARK ISOLATED — ALL BGs ═══════════════ -->
+<div class="section">
+  <p class="section-label">08 — Mark isolated · extended palette</p>
+  <div class="grid-4">
+
+    <div class="card bg-white" style="min-height:160px; padding:40px;">
+      <svg width="72" height="62" viewBox="0 0 104 88" fill="none">
+        <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+        <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+        <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+        <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+        <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+      </svg>
+    </div>
+
+    <div class="card bg-cream" style="min-height:160px; padding:40px;">
+      <svg width="72" height="62" viewBox="0 0 104 88" fill="none">
+        <rect x="0"  y="28" width="14" height="46" rx="5" fill="#2a2218"/>
+        <rect x="20" y="6"  width="14" height="68" rx="5" fill="#2a2218"/>
+        <rect x="40" y="52" width="14" height="22" rx="5" fill="#2a2218"/>
+        <rect x="60" y="16" width="14" height="58" rx="5" fill="#2a2218"/>
+        <rect x="80" y="62" width="14" height="12" rx="5" fill="#2a2218"/>
+      </svg>
+    </div>
+
+    <div class="card bg-warm" style="min-height:160px; padding:40px;">
+      <svg width="72" height="62" viewBox="0 0 104 88" fill="none">
+        <rect x="0"  y="28" width="14" height="46" rx="5" fill="#e8dfd0"/>
+        <rect x="20" y="6"  width="14" height="68" rx="5" fill="#e8dfd0"/>
+        <rect x="40" y="52" width="14" height="22" rx="5" fill="#e8dfd0"/>
+        <rect x="60" y="16" width="14" height="58" rx="5" fill="#e8dfd0"/>
+        <rect x="80" y="62" width="14" height="12" rx="5" fill="#e8dfd0"/>
+      </svg>
+    </div>
+
+    <div class="card bg-deep" style="min-height:160px; padding:40px;">
+      <svg width="72" height="62" viewBox="0 0 104 88" fill="none">
+        <rect x="0"  y="28" width="14" height="46" rx="5" fill="#6b6470"/>
+        <rect x="20" y="6"  width="14" height="68" rx="5" fill="#6b6470"/>
+        <rect x="40" y="52" width="14" height="22" rx="5" fill="#6b6470"/>
+        <rect x="60" y="16" width="14" height="58" rx="5" fill="#6b6470"/>
+        <rect x="80" y="62" width="14" height="12" rx="5" fill="#6b6470"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 09 · CIRCLE MARK ═══════════════ -->
+<div class="section">
+  <p class="section-label">09 — Circle container · social / avatar</p>
+  <div class="grid-3">
+
+    <div class="card bg-offwhite" style="padding:48px;">
+      <div class="circle-badge" style="background:#111;">
+        <svg width="52" height="46" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:#111;">Dark fill</span>
+    </div>
+
+    <div class="card bg-white" style="padding:48px;">
+      <div class="circle-badge" style="border:1px solid #ddd;">
+        <svg width="52" height="46" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:#111;">Outlined</span>
+    </div>
+
+    <div class="card bg-dark" style="padding:48px;">
+      <div class="circle-badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);">
+        <svg width="52" height="46" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:white;">Subtle container</span>
+    </div>
+
+  </div>
+  <p class="section-note">Social media avatars, app icons, profile images</p>
+</div>
+
+<!-- ═══════════════ 10 · ROUNDED SQUARE APP ICON ═══════════════ -->
+<div class="section">
+  <p class="section-label">10 — Rounded square · app icon</p>
+  <div class="grid-3">
+
+    <div class="card bg-offwhite" style="padding:48px;">
+      <div style="width:120px; height:120px; border-radius:26px; background:#111; display:flex; align-items:center; justify-content:center;">
+        <svg width="56" height="50" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:#111;">iOS / macOS</span>
+    </div>
+
+    <div class="card bg-offwhite" style="padding:48px;">
+      <div style="width:120px; height:120px; border-radius:26px; background:#fff; border:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center;">
+        <svg width="56" height="50" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="#111"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="#111"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="#111"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="#111"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="#111"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:#111;">Light variant</span>
+    </div>
+
+    <div class="card bg-dark" style="padding:48px;">
+      <div style="width:120px; height:120px; border-radius:26px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center;">
+        <svg width="56" height="50" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+      </div>
+      <span class="card-tag" style="color:white;">Dark variant</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 11 · MONOCHROME STRIP ═══════════════ -->
+<div class="section" style="background:#111; border-color:#222;">
+  <p class="section-label" style="color:#555;">11 — Opacity scale · monochrome range</p>
+  <div class="mono-strip">
+    <svg width="64" height="56" viewBox="0 0 104 88" fill="none" opacity="1">
+      <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+      <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+      <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+      <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+      <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+    </svg>
+    <svg width="64" height="56" viewBox="0 0 104 88" fill="none" opacity="0.6">
+      <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+      <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+      <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+      <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+      <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+    </svg>
+    <svg width="64" height="56" viewBox="0 0 104 88" fill="none" opacity="0.3">
+      <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+      <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+      <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+      <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+      <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+    </svg>
+    <svg width="64" height="56" viewBox="0 0 104 88" fill="none" opacity="0.12">
+      <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+      <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+      <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+      <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+      <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+    </svg>
+  </div>
+  <p class="section-note" style="color:#444; text-align:center;">100% · 60% · 30% · 12% — watermarks, overlays, background textures</p>
+</div>
+
+<!-- ═══════════════ 12 · STACKED COMPACT (SOCIAL BANNERS) ═══════════════ -->
+<div class="section">
+  <p class="section-label">12 — Stacked compact · social banners</p>
+  <div class="grid-2">
+
+    <div class="card bg-gradient-1" style="padding:64px 40px;">
+      <div class="lk-stacked">
+        <svg width="64" height="56" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="wordmark" style="align-items:center;">
+          <span class="wm-primary" style="color:white; font-size:12px; letter-spacing:6px;">GROWL AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Gradient A</span>
+    </div>
+
+    <div class="card bg-gradient-2" style="padding:64px 40px;">
+      <div class="lk-stacked">
+        <svg width="64" height="56" viewBox="0 0 104 88" fill="none">
+          <rect x="0"  y="28" width="14" height="46" rx="5" fill="white"/>
+          <rect x="20" y="6"  width="14" height="68" rx="5" fill="white"/>
+          <rect x="40" y="52" width="14" height="22" rx="5" fill="white"/>
+          <rect x="60" y="16" width="14" height="58" rx="5" fill="white"/>
+          <rect x="80" y="62" width="14" height="12" rx="5" fill="white"/>
+        </svg>
+        <div class="wordmark" style="align-items:center;">
+          <span class="wm-primary" style="color:white; font-size:12px; letter-spacing:6px;">GROWL AUDIO</span>
+        </div>
+      </div>
+      <span class="card-tag" style="color:white;">Gradient B</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div style="background:#111; padding:40px 80px; display:flex; justify-content:space-between; align-items:center;">
+  <span style="font-size:8px; letter-spacing:4px; text-transform:uppercase; color:#444;">Growl Audio — Brand Assets</span>
+  <span style="font-size:8px; letter-spacing:4px; text-transform:uppercase; color:#333;">Do not modify · Use as supplied</span>
+</div>
+
+</body>
+</html>
