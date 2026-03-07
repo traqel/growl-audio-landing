@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "upload": "aws s3 cp artifacts/gFractor-mac.zip s3://$BUCKET_NAME/downloads/gFractor-mac.zip && aws s3 cp artifacts/gFractor-win.zip s3://$BUCKET_NAME/downloads/gFractor-win.zip && aws s3 cp artifacts/gFractor-linux.zip s3://$BUCKET_NAME/downloads/gFractor-linux.zip"
+    "upload": "aws s3 cp artifacts/gFractor-macOS.pkg s3://$BUCKET_NAME/downloads/gFractor-macOS.pkg && aws s3 cp artifacts/gFractor-Windows.exe s3://$BUCKET_NAME/downloads/gFractor-Windows.exe && aws s3 cp artifacts/gFractor-Linux.deb s3://$BUCKET_NAME/downloads/gFractor-Linux.deb"
   },
   "devDependencies": {
     "vite": "^5.4.0"
