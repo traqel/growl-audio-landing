@@ -98,7 +98,7 @@ export class WebsiteStack extends cdk.Stack {
       origins.S3BucketOrigin.withOriginAccessControl(bucket),
       {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
         responseHeadersPolicy: downloadResponsePolicy,
       }
     );
